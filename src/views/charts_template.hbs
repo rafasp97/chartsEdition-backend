@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <style>
+      body{
+        background-image: url({{background}});
+        background-size: cover;       
+        background-repeat: no-repeat; 
+        background-position: center;  
+        height: 100vh;                
+      }
+
+      body>div{
+        display: flex;
+        flex-direction: row;
+        gap: 2em;
+        margin: 1em;
+      }
+      table {
+
+        background-color: rgba(255, 255, 255, 0.329);
+        width: 100%;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        border-collapse: separate;      /* IMPORTANTE: não use 'collapse' */
+        border-spacing: 0.4em 0.4em;
+      }
+      th, td {
+        border: 2px solid #ddd;
+        padding: 6px;
+        text-align: left;
+        font-size: 1.2em;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      }
+      th {
+        background-color: #f2f2f2;
+      }
+      .header{
+        display: flex;
+        justify-content: space-between;
+      }
+      .header>span{
+        margin-right: 2.7em;
+      }
+      .winContainer{
+        background-color: #121116;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        width: 40em;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      }
+      .winContainer>span, .header>span{
+        margin-top: 1em;
+        font-size: 2em;
+        color: #ddd;
+        letter-spacing: 0.5px;
+        font-weight: bold;
+      }
+      .winContainer>img{
+        width: 250px;
+      }
+      .crownContainer{
+        display: flex;
+        flex-direction: column;
+        gap: 1.2em;
+        padding-top: 0.5em;
+        position: relative;
+        left: 1em;
+      }
+      .icon{
+        width: 7em;
+      }
+      .crown{
+        width: 1.7em;
+      }
+      .name{
+        width: 100%;
+      }
+      .other{
+        width: 2em;
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="header">
+      <img src="{{logo}}" class="icon" alt="Descrição da imagem" />
+      <span class="">{{daysAgo}} a {{today}}</span>
+    </div>
+    <div>
+      <div class="winContainer">
+        <img src="{{win}}" class="icon" alt="Descrição da imagem" />
+        <span>{{artists.[0].name}}</span>
+      </div>
+      <div class="crownContainer">
+        <img src="{{crown}}" class="crown" alt="Descrição da imagem"  />
+        <img src="{{crown}}" class="crown" alt="Descrição da imagem"  />
+        <img src="{{crown}}" class="crown" alt="Descrição da imagem"  />
+      </div>
+      <table>
+        <tbody>
+          {{#each artists}}
+            <tr>
+              <td class="other">{{inc @index}}</td>
+              <td class="name">{{this.name}}</td>
+              <td class="other">{{this.playcount}}</td>
+            </tr>
+          {{/each}}
+        </tbody>
+      </table>
+    </div>
+  </body>
+</html>
