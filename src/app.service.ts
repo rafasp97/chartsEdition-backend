@@ -124,7 +124,10 @@ export class AppService {
       daysAgo: daysAgoFormat
     });
 
-    const browser = await puppeteer.launch();
+    const browser = await puppeteer.launch({
+      headless: true,
+      args: ['--no-sandbox', '--disable-setuid-sandbox'],
+    });
 
     //abre uma nova página no navegador.
     const page = await browser.newPage();
