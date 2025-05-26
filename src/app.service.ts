@@ -6,7 +6,6 @@ import { readFileSync } from 'fs';
 import { join } from 'path';
 import * as Handlebars from 'handlebars';
 import * as fs from 'fs';
-import { chromium } from 'playwright';
 
 interface Artist {
   name: string;
@@ -125,19 +124,23 @@ export class AppService {
       daysAgo: daysAgoFormat
     });
 
-    const browser = await chromium.launch({
+    const browser = await puppeteer.launch({
       headless: true,
       args: ['--no-sandbox', '--disable-setuid-sandbox'],
     });
-  
+
+    //abre uma nova página no navegador.
     const page = await browser.newPage();
-    await page.setContent(html, { waitUntil: 'networkidle' });
-  
+
+    //adiciona o template armazenado na constante html na página.
+    await page.setContent(html, { waitUntil: 'networkidle0' });
+
+    //renderiza a página em formato de imagem.
     const screenshot = await page.screenshot({ type: 'png' });
-  
+
     await browser.close();
-  
-    return screenshot;
+
+    return screenshot; 
 
   }
 
