@@ -41,7 +41,7 @@ export class AppService {
 
     const data = await this.getDATA();
 
-    return this.generateImg(data);
+    return await this.generateImg(data);
   }
 
 
@@ -58,9 +58,9 @@ export class AppService {
       };
     };
     
-    const noRepeat = this.noRepeat();
+    const noRepeat = await this.noRepeat();
 
-    const rank = this.getRank(noRepeat);
+    const rank = await this.getRank(noRepeat);
 
     return rank;
   }
@@ -76,7 +76,7 @@ export class AppService {
     }
   };
 
-  private noRepeat(){
+  private async noRepeat(){
     return  Object.values(this.artists.reduce((all, artist) => {
       const name = artist.name;
       const playcount = parseInt(artist.playcount);
@@ -88,7 +88,7 @@ export class AppService {
     }, {}) as Artist[]);
   };
 
-  private getRank(artists:Artist[]) {
+  private async getRank(artists:Artist[]) {
     return artists.sort((a:Artist, b:Artist) => b.playcount - a.playcount).slice(0, 10);
   }
 
