@@ -7,13 +7,12 @@ COPY package*.json ./
 RUN npm install
 
 COPY . .
-
 RUN npm run build
 
 # Etapa 2: produção
 FROM node:18-slim
 
-# Instala o Chromium (útil para puppeteer ou playwright)
+# Instala dependências do Chromium (para puppeteer-core)
 RUN apt-get update && apt-get install -y \
     chromium \
     fonts-liberation \
@@ -35,8 +34,12 @@ RUN apt-get update && apt-get install -y \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
+# Caminho onde o Chromium geralmente é instalado
+ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium
+
 WORKDIR /app
 
+# Copia apenas o que é necessário para produção
 COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/package*.json ./
