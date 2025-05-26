@@ -127,6 +127,7 @@ export class AppService {
 
     const browser = await puppeteer.launch({
       headless: true,
+      executablePath: '/usr/bin/chromium', // caminho do chromium no container Docker
       args: ['--no-sandbox', '--disable-setuid-sandbox'],
     });
 
