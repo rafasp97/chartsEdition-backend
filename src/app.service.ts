@@ -95,19 +95,20 @@ export class AppService {
   private async generateImg(data:Artist[]){
 
     //readFileSync ler o arquivo em forma de string e o join com __dirname é uma forma de encontrar o diretório.
-    const templateContent = readFileSync(join(__dirname, '..', 'src', 'views', 'charts_template.hbs'), 'utf-8');
+    const templateContent = readFileSync('/app/src/views/charts_template.hbs', 'utf-8');
 
     const today = new Date();
     const daysAgo = new Date();
     daysAgo.setDate(today.getDate() - 7);
 
+    '/app/src/images/logo.png'
     const todayFormat = this.formatDate(today);            
     const daysAgoFormat = this.formatDate(daysAgo); 
 
-    const logoBase64 = this.imageToBase64(join(__dirname, '..', 'src', 'images', 'logo.png'));
-    const bgBase64 = this.imageToBase64(join(__dirname, '..', 'src', 'images', 'bg.jpg'));
-    const win = this.imageToBase64(join(__dirname, '..', 'src', 'images', 'rebeca.jpg'));
-    const crown = this.imageToBase64(join(__dirname, '..', 'src', 'images', 'crown.png'));
+    const logoBase64 = this.imageToBase64('/app/src/images/logo.png');
+    const bgBase64 = this.imageToBase64('/app/src/images/bg.jpg');
+    const win = this.imageToBase64('/app/src/images/rebeca.jpg');
+    const crown = this.imageToBase64('/app/src/images/crown.png');
 
     //Compila o conteúdo em formato string e o transforma em uma função reutilizável que pode gerar HTML a partir de dados
     const template = Handlebars.compile(templateContent);
