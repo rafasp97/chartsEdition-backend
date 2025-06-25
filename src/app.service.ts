@@ -32,7 +32,7 @@ export class AppService {
     const daysAgoFormat = this.formatDate(daysAgo); 
 
     const logoBase64 = this.imageToBase64('/app/src/images/logo.png');
-    const bgBase64 = this.imageToBase64('/app/src/images/bg.jpg');
+    const bg = '/app/src/images/bg.png';
     const crown = this.imageToBase64('/app/src/images/crown.png');
 
     //Compila o conteúdo em formato string e o transforma em uma função reutilizável que pode gerar HTML a partir de dados
@@ -43,7 +43,7 @@ export class AppService {
     const html = template({
       artists: rank,
       logo: logoBase64,
-      background: bgBase64,
+      background: bg,
       win: image,
       crown: crown,
       today: todayFormat,
