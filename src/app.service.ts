@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { HttpService } from '@nestjs/axios';
 import { firstValueFrom } from 'rxjs';
 import * as puppeteer from 'puppeteer';
 import { readFileSync } from 'fs';
@@ -15,84 +14,12 @@ interface Artist {
 @Injectable()
 export class AppService {
 
-  users: string[] = [
-    'iraaaph', 
-    'guswlima', 
-    'piscixxx', 
-    'erikbzra', 
-    'candygor', 
-    'llucasmoreno5', 
-    'brunocosta061', 
-    'akumakoji', 
-    'becamusics',
-    'Edu_XS',
-    'felipetas',
-    'vitoriaforttes'
-  ];
-  artists: Artist[];
-
   constructor(
-    private readonly http: HttpService
+  
   ) {}
   
-  async getCharts(){
 
-    this.artists = [];
-
-    const data = await this.getDATA();
-
-    return await this.generateImg(data);
-  }
-
-
-  private async getDATA(){
-
-    for(const user of this.users){
-      const data = await this.request(user);
-
-      for(const artist of  data.topartists.artist){
-        this.artists.push({
-          name: artist.name,
-          playcount: artist.playcount
-        });
-      };
-    };
-    
-    const noRepeat = await this.noRepeat();
-
-    const rank = await this.getRank(noRepeat);
-
-    return rank;
-  }
-
-  private async request(user:string){
-    try{
-      const response = await firstValueFrom(
-        this.http.post(`https://ws.audioscrobbler.com/2.0/?method=user.gettopartists&user=${user}&api_key=7d6a2403de46005e4c8b90419196d615&period=7day&format=json`)
-      )
-      return response.data;
-    } catch(error){
-      return {message: `Error: ${error}, no user ${user}`};
-    }
-  };
-
-  private async noRepeat(){
-    return  Object.values(this.artists.reduce((all, artist) => {
-      const name = artist.name;
-      const playcount = parseInt(artist.playcount);
-
-      if(!all[name]) all[name] = {name: name, playcount: playcount};
-      else all[name].playcount += playcount;
-
-      return all;
-    }, {}) as Artist[]);
-  };
-
-  private async getRank(artists:Artist[]) {
-    return artists.sort((a:Artist, b:Artist) => b.playcount - a.playcount).slice(0, 10);
-  }
-
-  private async generateImg(data:Artist[]){
+  async generateImg(image:string, color: string, rank:any[]){
 
     //readFileSync ler o arquivo em forma de string e o join com __dirname é uma forma de encontrar o diretório.
     const templateContent = readFileSync('/app/src/views/charts_template.hbs', 'utf-8');
@@ -101,13 +28,11 @@ export class AppService {
     const daysAgo = new Date();
     daysAgo.setDate(today.getDate() - 7);
 
-    '/app/src/images/logo.png'
     const todayFormat = this.formatDate(today);            
     const daysAgoFormat = this.formatDate(daysAgo); 
 
     const logoBase64 = this.imageToBase64('/app/src/images/logo.png');
     const bgBase64 = this.imageToBase64('/app/src/images/bg.jpg');
-    const win = this.imageToBase64('/app/src/images/rebeca.jpg');
     const crown = this.imageToBase64('/app/src/images/crown.png');
 
     //Compila o conteúdo em formato string e o transforma em uma função reutilizável que pode gerar HTML a partir de dados
@@ -116,13 +41,14 @@ export class AppService {
 
     //conecta o template para identificar 'data' como 'artists'
     const html = template({
-      artists: data,
+      artists: rank,
       logo: logoBase64,
       background: bgBase64,
-      win: win,
+      win: image,
       crown: crown,
       today: todayFormat,
-      daysAgo: daysAgoFormat
+      daysAgo: daysAgoFormat,
+      color: color
     });
 
     const browser = await puppeteer.launch({
